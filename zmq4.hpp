@@ -185,7 +185,9 @@ namespace zmq {
             for (int i = 0; i < parts.size(); i++) {
                 int moreFlag = i == parts.size() - 1 ? 0 : ZMQ_SNDMORE;
 
-                zmq_check(zmq_send(sock.get(), parts[i].c_str(), parts[i].size(), flags | moreFlag));
+                if (zmq_send(sock.get(), parts[i].c_str(), parts[i].size(), flags | moreFlag) == -1) {
+                    throw runtime_error(zmq_strerror(zmq_errno()));
+                }
             }
         }
 
